@@ -1,0 +1,6 @@
+
+bin/Release/netcoreapp3.1/
+
+obj/Release/netcoreapp3.1/
+
+obj/
