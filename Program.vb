@@ -10,7 +10,10 @@ Module Program
     Property GhostDownloaded As Integer = 0
     Property LogFile As StreamWriter = New StreamWriter(
         New FileStream("ghosts.log", FileMode.Append, FileAccess.Write))
-
+    ''' <summary>
+    ''' Entry point of the program.
+    ''' </summary>
+    ''' <param name="args">Command line arguments.</param>
     Sub Main(args As String())
         LogFile.AutoFlush = True
         Log("CTGP-R Ghost Downloader (c) Iswenzz 2020" & Environment.NewLine)
@@ -24,19 +27,22 @@ Module Program
         Console.ReadLine()
     End Sub
 
+    ''' <summary>
+    ''' Download all leaderboards with Chadsoft API
+    ''' </summary>
     Sub DownloadAllLeaderboards()
         If Not Directory.Exists("ghosts") Then
             Directory.CreateDirectory("ghosts")
         End If
 
-        Dim Entries As List(Of Entry) = New List(Of Entry) From {
-            New Entry("150cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards.json"),
-            New Entry("200cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards-200cc.json"),
-            New Entry("150cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards.json"),
-            New Entry("200cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards-200cc.json")
+        Dim Entries As List(Of LeaderboardEntry) = New List(Of LeaderboardEntry) From {
+            New LeaderboardEntry("150cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards.json"),
+            New LeaderboardEntry("200cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards-200cc.json"),
+            New LeaderboardEntry("150cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards.json"),
+            New LeaderboardEntry("200cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards-200cc.json")
         }
 
-        For Each entry As Entry In Entries
+        For Each entry As LeaderboardEntry In Entries
             If AskUser("Download " & entry.Name & "?: [y/n]") Then
                 Using webClient As New WebClient()
                     Log(Environment.NewLine & "Downloading" & entry.Name & "Leaderboards . . ." & Environment.NewLine)
@@ -47,6 +53,10 @@ Module Program
         Next
     End Sub
 
+    ''' <summary>
+    ''' Download all ghosts from a specified leaderboard.
+    ''' </summary>
+    ''' <param name="trackLeaderboards">Leaderboard JSON Object.</param>
     Sub DownloadAllGhosts(ByVal trackLeaderboards As Object)
         Using webClient As New WebClient()
             For Each trackLink As Object In trackLeaderboards.leaderboards
@@ -73,6 +83,11 @@ Module Program
         End Using
     End Sub
 
+    ''' <summary>
+    ''' Prompt user for input.
+    ''' </summary>
+    ''' <param name="msg">The question string.</param>
+    ''' <returns></returns>
     Function AskUser(ByVal msg As String) As Boolean
         Log(msg)
         Dim res As String = Console.ReadLine()
@@ -86,6 +101,11 @@ Module Program
         Return True
     End Function
 
+    ''' <summary>
+    ''' Write to console output and file.
+    ''' </summary>
+    ''' <typeparam name="T">Primitive types.</typeparam>
+    ''' <param name="msg">Message to write.</param>
     Sub Log(Of T As {IComparable, IConvertible})(ByVal msg As T)
         LogFile.WriteLine(msg)
         Console.WriteLine(msg)
