@@ -4,3 +4,5 @@ bin/Release/netcoreapp3.1/
 obj/Release/netcoreapp3.1/
 
 obj/
+
+bin/Debug/netcoreapp3.1/
