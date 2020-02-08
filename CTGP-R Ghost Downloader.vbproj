@@ -12,6 +12,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ghosts\**" />
+    <EmbeddedResource Remove="ghosts\**" />
+    <None Remove="ghosts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="appveyor.yml" />
+    <None Remove="COVERAGE.sh" />
+    <None Remove="ghosts.log" />
+    <None Remove="opencoverCoverage.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 

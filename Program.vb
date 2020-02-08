@@ -17,7 +17,7 @@ Namespace Iswenzz.GhostDownloader
         ''' <param name="args">Command line arguments.</param>
         Sub Main(args As String())
             LogFile.AutoFlush = True
-            Log("CTGP-R Ghost Downloader (c) Iswenzz 2020" & Environment.NewLine)
+            Log("CTGP-R Ghost Downloader (c) Iswenzz 2020")
             DownloadAllLeaderboards()
 
             Log($"Successfuly downloaded {GhostDownloaded} ghosts.")
@@ -37,16 +37,16 @@ Namespace Iswenzz.GhostDownloader
             End If
 
             Dim Entries As List(Of LeaderboardEntry) = New List(Of LeaderboardEntry) From {
-            New LeaderboardEntry("150cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards.json"),
-            New LeaderboardEntry("200cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards-200cc.json"),
-            New LeaderboardEntry("150cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards.json"),
-            New LeaderboardEntry("200cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards-200cc.json")
-        }
+                New LeaderboardEntry("150cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards.json"),
+                New LeaderboardEntry("200cc Original Tracks", "http://tt.chadsoft.co.uk/original-track-leaderboards-200cc.json"),
+                New LeaderboardEntry("150cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards.json"),
+                New LeaderboardEntry("200cc CTGP Tracks", "http://tt.chadsoft.co.uk/ctgp-leaderboards-200cc.json")
+            }
 
             For Each entry As LeaderboardEntry In Entries
-                If AskUser("Download " & entry.Name & "?: [y/n]") Then
+                If AskUser(Environment.NewLine & "Download " & entry.Name & "?: [y/n]") Then
                     Using webClient As New WebClient()
-                        Log(Environment.NewLine & "Downloading " & entry.Name & " Leaderboards . . ." & Environment.NewLine)
+                        Log("Downloading " & entry.Name & " Leaderboards . . ." & Environment.NewLine)
                         Dim json As String = webClient.DownloadString(entry.URL)
                         DownloadAllGhosts(JsonConvert.DeserializeObject(Of ExpandoObject)(json))
                     End Using
@@ -93,9 +93,9 @@ Namespace Iswenzz.GhostDownloader
             Log(msg)
             Dim res As String = Console.ReadLine()
             If Not String.IsNullOrEmpty(res) Then
-                If res.Equals("y") Or res.Equals("yes") Then
+                If res.Trim().ToLower().Equals("y") Or res.Trim().ToLower().Equals("yes") Then
                     Return True
-                ElseIf res.Equals("n") Or res.Equals("no") Then
+                ElseIf res.Trim().ToLower().Equals("n") Or res.Trim().ToLower().Equals("no") Then
                     Return False
                 End If
             End If
