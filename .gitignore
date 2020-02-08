@@ -6,3 +6,11 @@ obj/Release/netcoreapp3.1/
 obj/
 
 bin/Debug/netcoreapp3.1/
+
+ghosts/
+
+ghosts.log
+
+COVERAGE.sh
+
+opencoverCoverage.xml
