@@ -46,7 +46,7 @@ Namespace Iswenzz.GhostDownloader
             For Each entry As LeaderboardEntry In Entries
                 If AskUser("Download " & entry.Name & "?: [y/n]") Then
                     Using webClient As New WebClient()
-                        Log(Environment.NewLine & "Downloading" & entry.Name & "Leaderboards . . ." & Environment.NewLine)
+                        Log(Environment.NewLine & "Downloading " & entry.Name & " Leaderboards . . ." & Environment.NewLine)
                         Dim json As String = webClient.DownloadString(entry.URL)
                         DownloadAllGhosts(JsonConvert.DeserializeObject(Of ExpandoObject)(json))
                     End Using
