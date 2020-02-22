@@ -67,9 +67,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property classic() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Classic() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("classic", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Classic", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -77,9 +77,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property gamecube() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Gamecube() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("gamecube", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Gamecube", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -87,9 +87,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property nunchuck() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property Nunchuck() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("nunchuck", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("Nunchuck", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
@@ -97,9 +97,19 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
-        Friend Shared ReadOnly Property wheel() As System.Drawing.Bitmap
+        Friend Shared ReadOnly Property USB_Gamecube() As System.Drawing.Bitmap
             Get
-                Dim obj As Object = ResourceManager.GetObject("wheel", resourceCulture)
+                Dim obj As Object = ResourceManager.GetObject("USB_Gamecube", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend Shared ReadOnly Property Wheel() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Wheel", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

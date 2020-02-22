@@ -1,8 +1,8 @@
 ﻿Namespace Iswenzz.GhostDownloader.Data
     Enum EControllers
+        Wheel
         Nunchuck
         Classic
-        Wheel
         Gamecube
         USB_Gamecube
     End Enum

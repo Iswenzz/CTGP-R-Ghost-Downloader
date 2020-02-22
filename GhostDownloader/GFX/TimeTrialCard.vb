@@ -41,7 +41,7 @@ Namespace Iswenzz.GhostDownloader
             TimeText = "1:08.774"
             PlayerName = "Cole"
 
-            ControllerImage = "gamecube"
+            ControllerImage = "Gamecube"
             ComboImage = "Spear_FunkyKong"
             FontFamily = New FontFamily("Monospac821 BT")
             FontSize = 32
@@ -76,6 +76,14 @@ Namespace Iswenzz.GhostDownloader
         ''' </summary>
         ''' <param name="path">Saving path</param>
         Public Sub Save(Optional path As String = "card.png")
+            'Get resource images
+            Dim _comboImage As Bitmap = Nothing, _controllerImage As Bitmap = Nothing
+            Try
+                _comboImage = My.Resources.Characters.ResourceManager.GetObject(ComboImage)
+                _controllerImage = My.Resources.Controllers.ResourceManager.GetObject(ControllerImage)
+            Catch
+            End Try
+
             'Text Alignment
             Using sfCenter As StringFormat = New StringFormat With {
                 .Alignment = StringAlignment.Center,
@@ -110,13 +118,17 @@ Namespace Iswenzz.GhostDownloader
                 Dim pController As RectangleF = New RectangleF(cardRect.X + (cardRect.Width / 1.4F),
                                                                cardRect.Y + (cardRect.Height / 3.9F),
                                                                cardRect.Height / 5, cardRect.Height / 5)
-                Graphics.DrawImage(My.Resources.Controllers.ResourceManager.GetObject(ControllerImage), pController)
+                If _controllerImage IsNot Nothing Then
+                    Graphics.DrawImage(_controllerImage, pController)
+                End If
 
                 'Combo
                 Dim comboRect As RectangleF = New RectangleF(cardRect.X + (cardRect.Width / 7.8F),
                                                              cardRect.Y + (cardRect.Height / 2.05F),
                                                              cardRect.Width / 5, cardRect.Height / 3)
-                Graphics.DrawImage(My.Resources.Characters.ResourceManager.GetObject(ComboImage), comboRect)
+                If _comboImage IsNot Nothing Then
+                    Graphics.DrawImage(_comboImage, comboRect)
+                End If
 
                 'Flag
                 Using atlas As BitmapAtlas = New BitmapAtlas(16, 16) With {
