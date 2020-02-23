@@ -71,13 +71,19 @@ Namespace Iswenzz.GhostDownloader
                             End Using
                             Exit Do
 
-                        Catch ex As WebException
-                            Select Case DirectCast(ex.Response, HttpWebResponse).StatusCode
-                                Case HttpStatusCode.ServiceUnavailable
-                                    Log("503 Service Unavailable... retrying in 30sec")
-                                    Thread.Sleep(30 * 1000)
-                                    Exit Select
-                            End Select
+                        Catch ex As Exception
+                            If TypeOf ex Is WebException Then
+                                Select Case DirectCast(DirectCast(ex, WebException).Response, HttpWebResponse).StatusCode
+                                    Case HttpStatusCode.ServiceUnavailable
+                                        Log("503 Service Unavailable... retrying in 30sec")
+                                        Thread.Sleep(30 * 1000)
+                                        Exit Select
+                                    Case Else
+                                        Exit Do
+                                End Select
+                            Else
+                                Exit Do
+                            End If
                         End Try
                     Loop
                 Next
