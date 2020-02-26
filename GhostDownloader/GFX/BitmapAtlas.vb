@@ -11,15 +11,31 @@ Namespace Iswenzz.GhostDownloader.GFX
         Public Property MaxX As Integer
         Public Property MaxY As Integer
 
+        ''' <summary>
+        ''' Initialize a new <see cref="BitmapAtlas"/> object.
+        ''' </summary>
+        ''' <param name="_mx">Max rows</param>
+        ''' <param name="_my">Max columns</param>
         Public Sub New(_mx As Integer, _my As Integer)
             MaxX = _mx
             MaxY = _my
         End Sub
 
+        ''' <summary>
+        ''' Crop the right image from atlas.
+        ''' </summary>
+        ''' <param name="index">Image index</param>
+        ''' <returns></returns>
         Public Function GetBitmapFromIndex(index As Integer) As Bitmap
             Return GetBitmapFromRowCol(index / MaxX, index Mod MaxX)
         End Function
 
+        ''' <summary>
+        ''' Crop the right image from atlas.
+        ''' </summary>
+        ''' <param name="x">Row index</param>
+        ''' <param name="y">Column Index</param>
+        ''' <returns></returns>
         Public Function GetBitmapFromRowCol(x As Integer, y As Integer) As Bitmap
             If Bitmap Is Nothing Then
                 Return Nothing
@@ -37,6 +53,9 @@ Namespace Iswenzz.GhostDownloader.GFX
             Return nb
         End Function
 
+        ''' <summary>
+        ''' Release all resources.
+        ''' </summary>
         Public Sub Dispose() Implements IDisposable.Dispose
             Bitmap?.Dispose()
         End Sub

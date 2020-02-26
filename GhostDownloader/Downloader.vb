@@ -3,10 +3,13 @@ Imports System.IO
 Imports System.Net
 Imports System.Threading
 Imports Iswenzz.GhostDownloader.Iswenzz.GhostDownloader.Data
+Imports Iswenzz.GhostDownloader.Iswenzz.GhostDownloader.Progress
 Imports Newtonsoft.Json
 
 Namespace Iswenzz.GhostDownloader
     Module Downloader
+        Public Property ShellProgress As ShellProgress
+
         ''' <summary>
         ''' Download all leaderboards with Chadsoft API
         ''' </summary>
@@ -23,10 +26,13 @@ Namespace Iswenzz.GhostDownloader
             }
 
             For Each entry As LeaderboardEntry In Entries
+                ShellProgress?.Dispose()
                 If AskUser(Environment.NewLine & "Download " & entry.Name & "?: [y/n]") Then
-                    Using webClient As New WebClient()
-                        Log("Downloading " & entry.Name & " Leaderboards . . ." & Environment.NewLine)
-                        Dim json As String = webClient.DownloadString(entry.URL)
+                    Using wc As New WebClient
+                        ShellProgress = New ShellProgress() With {
+                            .Title = entry.Name
+                        }
+                        Dim json As String = wc.DownloadString(entry.URL)
                         DownloadAllGhosts(JsonConvert.DeserializeObject(Of ExpandoObject)(json), entry.Speed)
                     End Using
                 End If
@@ -37,19 +43,28 @@ Namespace Iswenzz.GhostDownloader
         ''' Download all ghosts from a specified leaderboard.
         ''' </summary>
         ''' <param name="trackLeaderboards">Leaderboard JSON Object.</param>
+        ''' <param name="speed"></param>
         Sub DownloadAllGhosts(ByVal trackLeaderboards As Object, ByVal speed As String)
-            Using webClient As New WebClient()
-                For Each trackLink As Object In trackLeaderboards.leaderboards
-                    Do
+            Dim i As Integer = 0
+            ShellProgress.ProgressBar.MaxTicks = trackLeaderboards.leaderboards.Count
+            For Each trackLink As Object In trackLeaderboards.leaderboards
+                ShellProgress.ProgressBar.Message = $"- {ShellProgress.Title} Ghosts downloaded: {i}/{trackLeaderboards.leaderboards.Count}"
+                Do
+                    Using dl As New ProgressDownloadChild(ShellProgress,
+                        $"http://tt.chadsoft.co.uk{trackLink._links.item.href}?start=0&limit=1&times=pb")
                         Try
                             'Go to track leaderboard
-                            Dim json As String = webClient.DownloadString(
-                                $"http://tt.chadsoft.co.uk{trackLink._links.item.href}")
+                            Dim json As String = dl.Download().Result
+                            Debug.WriteLine(json)
                             Dim track As Object = JsonConvert.DeserializeObject(Of ExpandoObject)(json)
+                            dl.ProgressBar.MaxTicks = 1
+                            dl.ProgressBar.Tick()
+                            dl.FileName = track.name
+                            dl.ProgressBar.Message = "- " & track.name
+                            Console.Title = "CTGP-R Ghost Downloader"
 
                             'Download ghost
-                            Log($"{track.name} {track.ghosts(0).href}")
-                            webClient.DownloadFile($"http://tt.chadsoft.co.uk{track.ghosts(0).href}",
+                            dl.WebClient.DownloadFile($"http://tt.chadsoft.co.uk{track.ghosts(0).href}",
                                 "./ghosts/" & Path.GetFileName(DirectCast(track.ghosts(0).href, String)))
                             GhostDownloaded += 1
 
@@ -75,7 +90,7 @@ Namespace Iswenzz.GhostDownloader
                             If TypeOf ex Is WebException Then
                                 Select Case DirectCast(DirectCast(ex, WebException).Response, HttpWebResponse).StatusCode
                                     Case HttpStatusCode.ServiceUnavailable
-                                        Log("503 Service Unavailable... retrying in 30sec")
+                                        Console.Title = "503 Service Unavailable... Retrying in 30sec"
                                         Thread.Sleep(30 * 1000)
                                         Exit Select
                                     Case Else
@@ -85,9 +100,12 @@ Namespace Iswenzz.GhostDownloader
                                 Exit Do
                             End If
                         End Try
-                    Loop
-                Next
-            End Using
+                    End Using
+                Loop
+
+                i += 1
+                ShellProgress.ProgressBar.Tick(message:=$"- {ShellProgress.Title} Ghosts downloaded: {i}/{trackLeaderboards.leaderboards.Count}")
+            Next
         End Sub
 
         ''' <summary>
@@ -96,7 +114,7 @@ Namespace Iswenzz.GhostDownloader
         ''' <param name="msg">The question string.</param>
         ''' <returns></returns>
         Function AskUser(ByVal msg As String) As Boolean
-            Log(msg)
+            Console.WriteLine(msg)
             Dim res As String = Console.ReadLine()
 
             If Not String.IsNullOrEmpty(res) Then
@@ -111,13 +129,10 @@ Namespace Iswenzz.GhostDownloader
         End Function
 
         ''' <summary>
-        ''' Write to console output and file.
+        ''' Release app resources.
         ''' </summary>
-        ''' <typeparam name="T">Primitive types.</typeparam>
-        ''' <param name="msg">Message to write.</param>
-        Sub Log(Of T As {IComparable, IConvertible})(ByVal msg As T)
-            LogFile.WriteLine(msg)
-            Console.WriteLine(msg)
+        Public Sub Shutdown()
+            ShellProgress?.Dispose()
         End Sub
     End Module
 End Namespace

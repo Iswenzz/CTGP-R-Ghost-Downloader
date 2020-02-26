@@ -1,4 +1,6 @@
 
+\#BACKUP/
+
 bin/Release/netcoreapp3.1/
 
 obj/Release/netcoreapp3.1/
@@ -14,3 +16,4 @@ ghosts.log
 COVERAGE.sh
 
 opencoverCoverage.xml
+
