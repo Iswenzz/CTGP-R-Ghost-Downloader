@@ -1,5 +1,4 @@
 Option Strict Off
-Imports Iswenzz.GhostDownloader.Iswenzz.GhostDownloader.Progress
 
 Namespace Iswenzz.GhostDownloader
     Module Program
@@ -13,7 +12,6 @@ Namespace Iswenzz.GhostDownloader
         Sub Main(args As String())
             Console.ForegroundColor = ConsoleColor.Gray
             Console.Title = "CTGP-R Ghost Downloader"
-            Console.WriteLine("CTGP-R Ghost Downloader (c) Iswenzz 2020")
             DownloadAllLeaderboards()
 
             Console.WriteLine($"Successfuly downloaded {GhostDownloaded} ghosts.")

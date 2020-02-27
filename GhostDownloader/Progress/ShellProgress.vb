@@ -1,4 +1,5 @@
-﻿Imports System.Globalization
+﻿Imports System.Collections.Concurrent
+Imports System.Globalization
 Imports ShellProgressBar
 
 Namespace Iswenzz.GhostDownloader.Progress
@@ -7,9 +8,10 @@ Namespace Iswenzz.GhostDownloader.Progress
 
         Public Property ProgressBar As ProgressBar
         Public Property ProgressBarOptions As ProgressBarOptions
-        Public Property ProgressBarChildrens As List(Of ShellProgressChild)
+        Public Property ProgressBarChildrens As ConcurrentBag(Of ShellProgressChild)
         Public Property Title As String
         Public Property PTick As Long
+        Public Property Stopwatch As Stopwatch
 
         ''' <summary>
         ''' Initialize a new <see cref="ShellProgress"/> object.
@@ -43,14 +45,24 @@ Namespace Iswenzz.GhostDownloader.Progress
         ''' <param name="_initialMsg">Progress title</param>
         Public Sub New(_maxTick As Long, _options As ProgressBarOptions, Optional _initialMsg As String = Nothing)
             ProgressBar = New ProgressBar(_maxTick, _initialMsg, _options)
-            ProgressBarChildrens = New List(Of ShellProgressChild)
+            ProgressBarChildrens = New ConcurrentBag(Of ShellProgressChild)
+            Stopwatch = New Stopwatch()
         End Sub
 
         ''' <summary>
         ''' Report to the <see cref="ShellProgress"/>.
         ''' </summary>
         ''' <param name="currentTick"></param>
-        Public Overridable Sub Progress(currentTick As Long)
+        Public Overridable Sub Progress(currentTick As Long, Optional _message As String = Nothing)
+            If PTick = 0 Then
+                Stopwatch.Restart()
+                PTick = currentTick
+                Return
+            End If
+
+            PTick = currentTick
+            Dim estimatedTime As TimeSpan = TimeSpan.FromSeconds((ProgressBar.MaxTicks - PTick) / (PTick / Stopwatch.Elapsed.TotalSeconds))
+            ProgressBar.Tick(PTick, estimatedTime, _message)
         End Sub
 
         ''' <summary>
@@ -75,7 +87,7 @@ Namespace Iswenzz.GhostDownloader.Progress
         ''' </summary>
         Public Overridable Sub Dispose() Implements IDisposable.Dispose
             ProgressBar.Dispose()
-            For Each child As IProgressBar In ProgressBarChildrens
+            For Each child As IDisposable In ProgressBarChildrens
                 child?.Dispose()
             Next
             ProgressBarChildrens?.Clear()

@@ -99,7 +99,7 @@ Namespace Iswenzz.GhostDownloader.Progress
         ''' Report to the <see cref="ShellProgress"/>.
         ''' </summary>
         ''' <param name="currentTick">The current tick.</param>
-        Public Overrides Sub Progress(currentTick As Long)
+        Public Overrides Sub Progress(currentTick As Long, Optional _message As String = Nothing)
             If PTick = 0 Then
                 Stopwatch.Restart()
                 PTick = currentTick

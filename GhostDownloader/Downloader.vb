@@ -5,6 +5,7 @@ Imports System.Threading
 Imports Iswenzz.GhostDownloader.Iswenzz.GhostDownloader.Data
 Imports Iswenzz.GhostDownloader.Iswenzz.GhostDownloader.Progress
 Imports Newtonsoft.Json
+Imports ShellProgressBar
 
 Namespace Iswenzz.GhostDownloader
     Module Downloader
@@ -27,6 +28,8 @@ Namespace Iswenzz.GhostDownloader
 
             For Each entry As LeaderboardEntry In Entries
                 ShellProgress?.Dispose()
+                Console.Clear()
+                Console.WriteLine("CTGP-R Ghost Downloader (c) Iswenzz 2020")
                 If AskUser(Environment.NewLine & "Download " & entry.Name & "?: [y/n]") Then
                     Using wc As New WebClient
                         ShellProgress = New ShellProgress() With {
@@ -46,66 +49,91 @@ Namespace Iswenzz.GhostDownloader
         ''' <param name="speed"></param>
         Sub DownloadAllGhosts(ByVal trackLeaderboards As Object, ByVal speed As String)
             Dim i As Integer = 0
+            'Set MaxTicks to leaderboards count
             ShellProgress.ProgressBar.MaxTicks = trackLeaderboards.leaderboards.Count
-            For Each trackLink As Object In trackLeaderboards.leaderboards
-                ShellProgress.ProgressBar.Message = $"- {ShellProgress.Title} Ghosts downloaded: {i}/{trackLeaderboards.leaderboards.Count}"
-                Do
-                    Using dl As New ProgressDownloadChild(ShellProgress,
-                        $"http://tt.chadsoft.co.uk{trackLink._links.item.href}?start=0&limit=1&times=pb")
+            ShellProgress.Progress(0)
+            Dim leaderboards As List(Of Object) = trackLeaderboards.leaderboards
+            'Download ghosts
+            Parallel.ForEach(leaderboards, New ParallelOptions() With {.MaxDegreeOfParallelism = 12},
+                Sub(trackLink As Object) DownloadGhost(trackLink, speed))
+        End Sub
+
+        ''' <summary>
+        ''' Download ghost from specified trackLink JSON.
+        ''' </summary>
+        ''' <param name="trackLink">TrackLink JSON</param>
+        ''' <param name="speed">Speed string</param>
+        Sub DownloadGhost(trackLink As Object, speed As String)
+            ShellProgress.ProgressBar.Message = $"- {ShellProgress.Title} Ghosts downloaded: {ShellProgress.PTick}/{ShellProgress.ProgressBar.MaxTicks}"
+            Do
+                Using dl As New ProgressDownloadChild(ShellProgress,
+                    $"http://tt.chadsoft.co.uk{trackLink._links.item.href}?start=0&limit=1&times=pb", 1,
+                    New ProgressBarOptions() With {
+                        .ProgressBarOnBottom = True,
+                        .ForegroundColor = ConsoleColor.DarkCyan,
+                        .ForegroundColorDone = ConsoleColor.DarkCyan,
+                        .BackgroundColor = ConsoleColor.DarkGray,
+                        .BackgroundCharacter = "\u2593",
+                        .ShowEstimatedDuration = False,
+                        .DisplayTimeInRealTime = True,
+                        .EnableTaskBarProgress = True
+                    })
+                    Try
+                        'Go to track leaderboard
+                        Dim json As String = dl.Download().Result
+                        Dim track As Object = JsonConvert.DeserializeObject(Of ExpandoObject)(json)
+                        dl.ProgressBar.MaxTicks = 1
+                        dl.ProgressBar.Tick(1, "- " & track.name)
+                        dl.FileName = track.name
+
+                        'Download ghost
+                        dl.WebClient.DownloadFile($"http://tt.chadsoft.co.uk{track.ghosts(0).href}",
+                        "./ghosts/" & Path.GetFileName(DirectCast(track.ghosts(0).href, String)))
+                        GhostDownloaded += 1
+
+                        'Get ghost country code
+                        Dim _countryCode As Integer = 0
                         Try
-                            'Go to track leaderboard
-                            Dim json As String = dl.Download().Result
-                            Debug.WriteLine(json)
-                            Dim track As Object = JsonConvert.DeserializeObject(Of ExpandoObject)(json)
-                            dl.ProgressBar.MaxTicks = 1
-                            dl.ProgressBar.Tick()
-                            dl.FileName = track.name
-                            dl.ProgressBar.Message = "- " & track.name
-                            Console.Title = "CTGP-R Ghost Downloader"
-
-                            'Download ghost
-                            dl.WebClient.DownloadFile($"http://tt.chadsoft.co.uk{track.ghosts(0).href}",
-                                "./ghosts/" & Path.GetFileName(DirectCast(track.ghosts(0).href, String)))
-                            GhostDownloaded += 1
-
-                            'Render a time trial card
-                            Using card As TimeTrialCard = New TimeTrialCard() With {
-                                .CircuitName = track.name,
-                                .TimeText = track.ghosts(0).finishTimeSimple,
-                                .ControllerImage = DirectCast(Integer.Parse(track.ghosts(0).controller), EControllers).ToString(),
-                                .CountryCode = track.ghosts(0).country,
-                                .PlayerName = track.ghosts(0).player,
-                                .ComboImage = DirectCast(Integer.Parse(track.ghosts(0).vehicleId), EVehicles).ToString() +
-                                    "_" + DirectCast(Integer.Parse(track.ghosts(0).driverId), EDrivers).ToString()
-                            }
-                                Dim savePath As String = $"{card.CircuitName}_{card.TimeText}_{speed}.png"
-                                If Not Directory.Exists("cards") Then
-                                    Directory.CreateDirectory("cards")
-                                End If
-                                card.Save(Path.Join("cards", String.Concat(savePath.Split(Path.GetInvalidFileNameChars()))))
-                            End Using
-                            Exit Do
-
-                        Catch ex As Exception
-                            If TypeOf ex Is WebException Then
-                                Select Case DirectCast(DirectCast(ex, WebException).Response, HttpWebResponse).StatusCode
-                                    Case HttpStatusCode.ServiceUnavailable
-                                        Console.Title = "503 Service Unavailable... Retrying in 30sec"
-                                        Thread.Sleep(30 * 1000)
-                                        Exit Select
-                                    Case Else
-                                        Exit Do
-                                End Select
-                            Else
-                                Exit Do
-                            End If
+                            _countryCode = track.ghosts(0).country
+                        Catch
                         End Try
-                    End Using
-                Loop
 
-                i += 1
-                ShellProgress.ProgressBar.Tick(message:=$"- {ShellProgress.Title} Ghosts downloaded: {i}/{trackLeaderboards.leaderboards.Count}")
-            Next
+                        'Render a time trial card
+                        Using card As TimeTrialCard = New TimeTrialCard() With {
+                            .CircuitName = track.name,
+                            .TimeText = track.ghosts(0).finishTimeSimple,
+                            .ControllerImage = DirectCast(Integer.Parse(track.ghosts(0).controller), EControllers).ToString(),
+                            .CountryCode = _countryCode,
+                            .PlayerName = track.ghosts(0).player,
+                            .ComboImage = DirectCast(Integer.Parse(track.ghosts(0).vehicleId), EVehicles).ToString() +
+                                "_" + DirectCast(Integer.Parse(track.ghosts(0).driverId), EDrivers).ToString()
+                        }
+                            Dim savePath As String = $"{card.CircuitName}_{card.TimeText}_{speed}.png"
+                            If Not Directory.Exists("cards") Then
+                                Directory.CreateDirectory("cards")
+                            End If
+                            card.Save(Path.Join("cards", String.Concat(savePath.Split(Path.GetInvalidFileNameChars()))))
+                        End Using
+                        Exit Do
+
+                    Catch ex As Exception
+                        If TypeOf ex Is WebException Then
+                            Select Case DirectCast(DirectCast(ex, WebException).Response, HttpWebResponse).StatusCode
+                                Case HttpStatusCode.ServiceUnavailable
+                                    ShellProgress.ProgressBar.Message = "- 503 Service Unavailable... Retrying in 30sec"
+                                    Thread.Sleep(30 * 1000)
+                                    Exit Select
+                                Case Else
+                                    Exit Do
+                            End Select
+                        Else
+                            Exit Do
+                        End If
+                    End Try
+                End Using
+            Loop
+            ShellProgress.PTick += 1
+            ShellProgress.Progress(ShellProgress.PTick, $"- {ShellProgress.Title} Ghosts downloaded: {ShellProgress.PTick}/{ShellProgress.ProgressBar.MaxTicks}")
         End Sub
 
         ''' <summary>
