@@ -11,9 +11,15 @@
     <DebugType>full</DebugType>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove=".gitignore" />
     <None Remove="appveyor.yml" />
+    <None Remove="COVERAGE.bat" />
     <None Remove="COVERAGE.sh" />
     <None Remove="ghosts.log" />
     <None Remove="opencoverCoverage.xml" />
