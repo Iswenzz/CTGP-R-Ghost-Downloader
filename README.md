@@ -7,7 +7,9 @@
 
 Downloads all Mario Kart WII world records from CTGPs leaderboards
 
-![](https://i.imgur.com/G0smFSY.png)
+![](https://i.imgur.com/TbTRmjB.jpg)
 
-* 150/200cc Original Tracks
-* 150/200cc CTGP Tracks
+* Original Tracks 150/200cc Leaderboards
+* CTGP Tracks 150/200cc Leaderboards
+* Time trial cards
+* Download progress
