@@ -24,7 +24,7 @@ In order to use this application, just download the archived file down below, an
 ## Building
 1. [Visual Studio](https://visualstudio.microsoft.com/)
 
-### [Download](https://github.com/Iswenzz/SR-App/releases)
+### [Download](https://github.com/Iswenzz/CTGP-R-Ghost-Downloader/releases)
 
 ## Contributors:
 ***Note:*** If you would like to contribute to this repository, feel free to send a pull request, and I will review your code. Also feel free to post about any problems that may arise in the issues section of the repository.
