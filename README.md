@@ -1,9 +1,9 @@
 # CTGP-R Ghost Downloader
 
-[![Build status](https://ci.appveyor.com/api/projects/status/3f5m3im9bxanngsj?svg=true)](https://ci.appveyor.com/project/Iswenzz/ctgp-r-ghost-downloader)
-[![codecov](https://codecov.io/gh/Iswenzz/CTGP-R-Ghost-Downloader/branch/master/graph/badge.svg)](https://codecov.io/gh/Iswenzz/CTGP-R-Ghost-Downloader)
-[![CodeFactor](https://www.codefactor.io/repository/github/iswenzz/ctgp-r-ghost-downloader/badge)](https://www.codefactor.io/repository/github/iswenzz/ctgp-r-ghost-downloader)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![Checks](https://img.shields.io/github/checks-status/Iswenzz/CTGP-R-Ghost-Downloader/master?logo=github)](https://github.com/Iswenzz/CTGP-R-Ghost-Downloader/actions)
+[![CodeFactor](https://img.shields.io/codefactor/grade/github/Iswenzz/CTGP-R-Ghost-Downloader?label=codefactor&logo=codefactor)](https://www.codefactor.io/repository/github/iswenzz/CTGP-R-Ghost-Downloader)
+[![CodeCov](https://img.shields.io/codecov/c/github/Iswenzz/CTGP-R-Ghost-Downloader?label=codecov&logo=codecov)](https://codecov.io/gh/Iswenzz/CTGP-R-Ghost-Downloader)
+[![License](https://img.shields.io/github/license/Iswenzz/CTGP-R-Ghost-Downloader?color=blue&logo=gitbook&logoColor=white)](https://github.com/Iswenzz/CTGP-R-Ghost-Downloader/blob/master/LICENSE)
 
 The purpose of CTGP-R Ghost Downloader is to be able to view rankings and download all of the Mario Kart WII world records from the CTGP leaderboards. Ghosts that will be downloaded include all original tracks at 150cc and 200cc, as well as CTGP custom tracks at 150cc and 200cc. 
 
