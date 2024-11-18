@@ -5,9 +5,9 @@
 [![CodeCov](https://img.shields.io/codecov/c/github/Iswenzz/CTGP-R-Ghost-Downloader?label=codecov&logo=codecov)](https://codecov.io/gh/Iswenzz/CTGP-R-Ghost-Downloader)
 [![License](https://img.shields.io/github/license/Iswenzz/CTGP-R-Ghost-Downloader?color=blue&logo=gitbook&logoColor=white)](https://github.com/Iswenzz/CTGP-R-Ghost-Downloader/blob/master/LICENSE)
 
-The purpose of CTGP-R Ghost Downloader is to be able to view rankings and download all of the Mario Kart WII world records from the CTGP leaderboards. Ghosts that will be downloaded include all original tracks at 150cc and 200cc, as well as CTGP custom tracks at 150cc and 200cc. 
+![](https://i.imgur.com/SH7M1Th.jpeg)
 
-![](https://i.imgur.com/TbTRmjB.jpg)
+The purpose of CTGP-R Ghost Downloader is to be able to view rankings and download all of the Mario Kart WII world records from the CTGP leaderboards. Ghosts that will be downloaded include all original tracks at 150cc and 200cc, as well as CTGP custom tracks at 150cc and 200cc.
 
 ## Features
 * Original Tracks 150/200cc Leaderboards
