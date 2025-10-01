@@ -2,7 +2,6 @@
 
 [![Checks](https://img.shields.io/github/check-runs/Iswenzz/CTGP-R-Ghost-Downloader/master?logo=github)](https://github.com/Iswenzz/CTGP-R-Ghost-Downloader/actions)
 [![CodeFactor](https://img.shields.io/codefactor/grade/github/Iswenzz/CTGP-R-Ghost-Downloader?label=codefactor&logo=codefactor)](https://www.codefactor.io/repository/github/iswenzz/CTGP-R-Ghost-Downloader)
-[![CodeCov](https://img.shields.io/codecov/c/github/Iswenzz/CTGP-R-Ghost-Downloader?label=codecov&logo=codecov)](https://codecov.io/gh/Iswenzz/CTGP-R-Ghost-Downloader)
 [![License](https://img.shields.io/github/license/Iswenzz/CTGP-R-Ghost-Downloader?color=blue&logo=gitbook&logoColor=white)](https://github.com/Iswenzz/CTGP-R-Ghost-Downloader/blob/master/LICENSE)
 
 ![](https://i.imgur.com/SH7M1Th.jpeg)
